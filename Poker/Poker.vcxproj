@@ -39,7 +39,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
@@ -62,9 +62,13 @@
   <ItemGroup>
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Parse.cpp" />
+    <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logic.h" />
+    <ClInclude Include="Parse.h" />
+    <ClInclude Include="Tests.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

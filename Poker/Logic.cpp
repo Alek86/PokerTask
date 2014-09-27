@@ -17,14 +17,12 @@ namespace
 			[rank](const Card& card){ return card.rank == rank; }) != std::end(cards);
 	}
 
-	// The function would be MUCH faster if Cards were std::set.
-	// But for the test task and 5 elements...
 	bool IsStraight(const Hand& cards)
 	{
         bool result = true;
-        for (auto i = 0; i < cards.size() - 1; ++i)
+        for (size_t i = 0; i < cards.size() - 1; ++i)
         {
-            if (GetRankInt(cards[i]) != GetRankInt(cards[i + 1]) - 1)
+            if (GetRankInt(cards[i]) != GetRankInt(cards[i + 1]) + 1)
             {
                 result = false;
                 break;
@@ -37,17 +35,17 @@ namespace
         }
 
 		// If not, check the special case with Ace
-		bool isSpecialCaseWorked =
+		bool isSpecialCaseTrue =
 			cards[0].rank == Rank::Ace &&
-			cards[1].rank == Rank::C2 &&
-			cards[2].rank == Rank::C3 &&
-			cards[3].rank == Rank::C4 &&
-			cards[4].rank == Rank::C5;
+			cards[1].rank == Rank::C5 &&
+			cards[2].rank == Rank::C4 &&
+			cards[3].rank == Rank::C3 &&
+			cards[4].rank == Rank::C2;
 
-		return isSpecialCaseWorked;
+		return isSpecialCaseTrue;
 	}
 
-	bool IsSameSuit(const Hand& cards)
+	bool AreCardsSameSuit(const Hand& cards)
 	{
 		auto firstSuit = cards[0].suit;
 		for(auto it = std::begin(cards); it != std::end(cards); ++it)
@@ -61,51 +59,35 @@ namespace
 		return true;
 	}
 
-	CompareResult::Value CompareStraightFlush(const Hand& rhs, const Hand& lhs)
-	{
-		IsStraight(rhs);
-		IsSameSuit(rhs);
-	}
+    template <typename It>
+    bool AreCardsSameRank(It begin, It end)
+    {
+        if (begin == end)
+        {
+            return true;
+        }
 
-	CompareResult::Value Compare4OfAKind(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
+        auto firstRank = begin->rank;
+        for(auto it = begin; it != end; ++it)
+        {
+            if (it->rank != firstRank)
+            {
+                return false;
+            }
+        }
 
-	CompareResult::Value CompareFullHouse(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
+        return true;
+    }
 
-	CompareResult::Value CompareFlush(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
+    Rank::Value Get4OfKindKicker(const Hand& cards)
+    {
+        if (cards[0].rank != cards[2].rank)
+        {
+            return cards[0].rank;
+        }
 
-	CompareResult::Value CompareStraight(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
-
-	CompareResult::Value Compare3OfAKind(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
-
-	CompareResult::Value CompareTwoPair(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
-
-	CompareResult::Value CompareOnePair(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
-
-	CompareResult::Value CompareHighCard(const Hand& rhs, const Hand& lhs)
-	{
-		;	
-	}
+        return cards[4].rank;
+    }
 }
 
 Hand GetBestSet(
@@ -148,7 +130,7 @@ Hand GetBestSet(
 	{
 		for (size_t j = 0; j < numOfCombinationsFromBoard; ++j)
 		{
-            // Create a hand (5 cards). It must be sorted by Rank
+            // Create a hand (5 cards). It must be sorted descending by Rank
             Hand currentSet;
             currentSet[0] = inHand[combinationsFromHandIndices[i][0]];
             currentSet[1] = inHand[combinationsFromHandIndices[i][1]];
@@ -158,7 +140,7 @@ Hand GetBestSet(
             std::sort(
                 std::begin(currentSet),
                 std::end(currentSet),
-                [](const Card& r, const Card& l) { return r.rank < l.rank; });
+                [](const Card& r, const Card& l) { return r.rank > l.rank; });
 
 			if (isFirstIteration)
 			{
@@ -168,7 +150,8 @@ Hand GetBestSet(
 				continue;
 			}
 
-			if (isFirstBetterPredicate(currentSet, bestSet))
+            auto compareResult = isFirstBetterPredicate(currentSet, bestSet);
+			if (compareResult == CompareResult::FirstWon)
 			{
 				bestSet.swap(currentSet);
 			}
@@ -176,6 +159,137 @@ Hand GetBestSet(
 	}
 
 	return bestSet;
+}
+
+CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second)
+{
+    const bool isFirstApplicable = IsStraight(first) && AreCardsSameSuit(first);
+    const bool isSecondApplicable = IsStraight(second) && AreCardsSameSuit(second);
+
+    if (isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (!isFirstApplicable && isSecondApplicable)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (!isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::BothLose;
+    }
+
+    const int highestCardFromFirst = GetRankInt(first[0]);
+    const int highestCardFromSecond = GetRankInt(second[0]);
+
+    if (highestCardFromFirst > highestCardFromSecond)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (highestCardFromFirst < highestCardFromSecond)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    return CompareResult::BothWon;
+}
+
+CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second)
+{
+    // The hand is sorted, so we just check if 4 first or 4 last cards have the same rank
+    auto itBeginFirst = std::begin(first);
+    auto it4First = itBeginFirst;
+    std::advance(it4First, 4);
+    auto it1First = itBeginFirst;
+    std::advance(it1First, 1);
+
+    const bool isFirstApplicable = AreCardsSameRank(itBeginFirst, it4First) || AreCardsSameRank(it1First, std::end(first));
+    
+    auto itBeginSecond = std::begin(second);
+    auto it4Second = itBeginSecond;
+    std::advance(it4Second, 4);
+    auto it1Second = itBeginSecond;
+    std::advance(it1Second, 1);
+    const bool isSecondApplicable = AreCardsSameRank(itBeginSecond, it4Second) || AreCardsSameRank(it1Second, std::end(second));
+
+    if (isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (!isFirstApplicable && isSecondApplicable)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (!isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::BothLose;
+    }
+
+    // In 4-of-a-kind in a sorted array the third card always has the duplicated rank
+    if (GetRankInt(first[2]) > GetRankInt(second[2]))
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (GetRankInt(first[2]) < GetRankInt(second[2]))
+    {
+        return CompareResult::SecondWon;
+    }
+
+    const auto kickerFirst = Get4OfKindKicker(first);
+    const auto kickerSecond = Get4OfKindKicker(second);
+
+    if (kickerFirst > kickerSecond)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (kickerFirst < kickerSecond)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    return CompareResult::BothWon;
+}
+
+CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
+}
+
+CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
+}
+
+CompareResult::Value CompareStraight(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
+}
+
+CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
+}
+
+CompareResult::Value CompareTwoPair(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
+}
+
+CompareResult::Value CompareOnePair(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
+}
+
+CompareResult::Value CompareHighCard(const Hand& first, const Hand& second)
+{
+    throw std::exception("Not implemented");
 }
 
 CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs)
@@ -187,6 +301,11 @@ CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs)
 	{
 		return result;
 	}
+
+   
+    return result; // TODO Delete!
+
+
 
 	result = Compare4OfAKind(rhs, lhs);
 	if (result != CompareResult::BothLose)
