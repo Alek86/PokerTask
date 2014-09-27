@@ -88,6 +88,30 @@ namespace
 
         return cards[4].rank;
     }
+
+    template <typename It>
+    It GetAdvancedIt(It it, size_t n)
+    {
+        std::advance(it, n);
+        return it;
+    }
+
+    void CheckFullHouse(const Hand& cards, bool& isFirstApplicable3And2, bool& isFirstApplicable2And3 )
+    {
+        auto itBegin = std::begin(cards);
+        auto it2 = GetAdvancedIt(itBegin, 2);
+        auto it3 = GetAdvancedIt(itBegin, 3);
+        isFirstApplicable2And3 = AreCardsSameRank(itBegin, it2) || AreCardsSameRank(it2, std::end(cards));
+        isFirstApplicable3And2 = AreCardsSameRank(itBegin, it3) || AreCardsSameRank(it3, std::end(cards));
+    }
+
+    bool Check4OfAKind(const Hand& cards, bool& isFirstApplicable3And2, bool& isFirstApplicable2And3 )
+    {
+        auto itBegin = std::begin(cards);
+        auto it4 = GetAdvancedIt(itBegin, 4);
+        auto it1 = GetAdvancedIt(itBegin, 1);
+        return AreCardsSameRank(itBegin, it4) || AreCardsSameRank(it1, std::end(cards));
+    }
 }
 
 Hand GetBestSet(
@@ -201,18 +225,13 @@ CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second)
 {
     // The hand is sorted, so we just check if 4 first or 4 last cards have the same rank
     auto itBeginFirst = std::begin(first);
-    auto it4First = itBeginFirst;
-    std::advance(it4First, 4);
-    auto it1First = itBeginFirst;
-    std::advance(it1First, 1);
-
+    auto it4First = GetAdvancedIt(itBeginFirst, 4);
+    auto it1First = GetAdvancedIt(itBeginFirst, 1);
     const bool isFirstApplicable = AreCardsSameRank(itBeginFirst, it4First) || AreCardsSameRank(it1First, std::end(first));
     
     auto itBeginSecond = std::begin(second);
-    auto it4Second = itBeginSecond;
-    std::advance(it4Second, 4);
-    auto it1Second = itBeginSecond;
-    std::advance(it1Second, 1);
+    auto it4Second = GetAdvancedIt(itBeginSecond, 4);
+    auto it1Second = GetAdvancedIt(itBeginSecond, 1);
     const bool isSecondApplicable = AreCardsSameRank(itBeginSecond, it4Second) || AreCardsSameRank(it1Second, std::end(second));
 
     if (isFirstApplicable && !isSecondApplicable)
@@ -257,9 +276,16 @@ CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
+
 CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second)
 {
-    throw std::exception("Not implemented");
+    CheckFullHouse(first, isFirstApplicable3And2, isFirstApplicable2And3);
+    const bool isFirstApplicable = isFirstApplicable2And3 || isFirstApplicable3And2;
+
+    CheckFullHouse(first, isFirstApplicable3And2, isFirstApplicable2And3);
+    const bool isFirstApplicable = isFirstApplicable2And3 || isFirstApplicable3And2;
+
+
 }
 
 CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
