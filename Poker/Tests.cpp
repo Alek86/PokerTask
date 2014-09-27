@@ -30,10 +30,18 @@ namespace
         }
     }
 
-
     void Test4OfAKind(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
     {
         auto result = Compare4OfAKind(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
+
+    void TestFullHouse(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = CompareFullHouse(ParseToHand(first), ParseToHand(second));
         if (result != expectedResult)
         {
             ShowError(__FUNCTION__, first, second, expectedResult, result);
@@ -58,4 +66,11 @@ void RunTests()
     Test4OfAKind("2s-2h-9s-2c-2d", "2s-2h-Th-2c-2d", CompareResult::SecondWon);
     Test4OfAKind("2s-2h-9s-2c-2d", "2s-2h-2c-9c-2d", CompareResult::BothWon);
     Test4OfAKind("2s-3h-9s-2c-2d", "2s-Ah-2c-9c-2d", CompareResult::BothLose);
+
+    TestFullHouse("2s-3h-3s-2c-3d", "2s-Ah-2c-9c-2d", CompareResult::FirstWon);
+    TestFullHouse("2s-Ah-2c-9c-2d", "2s-4h-4s-2c-4d", CompareResult::SecondWon);
+    TestFullHouse("5s-5h-Jc-Jc-Jd", "2s-4h-4s-2c-4d", CompareResult::FirstWon);
+    TestFullHouse("2s-Ah-As-2c-2d", "5s-5h-Jc-Jc-Jd", CompareResult::SecondWon);
+    TestFullHouse("2s-Jh-Js-2c-Jd", "5s-5h-Jc-Jc-Jd", CompareResult::SecondWon);
+    TestFullHouse("5s-Jh-Js-5c-Jd", "5s-5h-Jc-Jc-Jd", CompareResult::BothWon);
 }
