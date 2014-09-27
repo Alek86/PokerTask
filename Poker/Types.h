@@ -4,19 +4,19 @@
 
 namespace Rank { enum Value
 {
-	Ace,
-	King,
-	Queen,
-	Jack,
-	C10,
-	C9,
-	C8,
-	C7,
-	C6,
-	C5,
-	C4,
+	C2 = 2,
 	C3,
-	C2
+	C4,
+	C5,
+	C6,
+	C7,
+	C8,
+	C9,
+	C10,
+	Jack,
+	Queen,
+	King,
+	Ace,	
 };}
 
 namespace Suit { enum Value
@@ -25,6 +25,13 @@ namespace Suit { enum Value
 	Clubs,
 	Hearts,
 	Spades
+};}
+
+namespace CompareResult { enum Value {
+	FirstWon = 1,
+	SecondWon = -1,
+	BothWon = 0,
+	BothLose = -2
 };}
 
 struct Card
