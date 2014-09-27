@@ -117,14 +117,44 @@ namespace
         return AreCardsSameRank(itBegin, it4) || AreCardsSameRank(it1, std::end(cards));
     }
 
-    void CheckFullHouse(const Hand& cards, bool& isApplicable3And2, bool& isApplicable2And3 )
+    void CheckFullHouse(const Hand& cards, bool& isApplicable3And2, bool& isApplicable2And3)
     {
+        isApplicable3And2 = false;
+        isApplicable2And3 = false;
         // The hand is sorted, so we just check if 4 first or 4 last cards have the same rank
         auto itBegin = std::begin(cards);
         auto it2 = GetAdvancedIt(itBegin, 2);
         auto it3 = GetAdvancedIt(itBegin, 3);
         isApplicable2And3 = AreCardsSameRank(itBegin, it2) && AreCardsSameRank(it2, std::end(cards));
+        if (isApplicable2And3)
+        {
+            return;
+        }
+
         isApplicable3And2 = AreCardsSameRank(itBegin, it3) && AreCardsSameRank(it3, std::end(cards));
+    }
+
+    void Check3OfAKind(const Hand& cards, bool& isFirstApplicable0, bool& isFirstApplicable1, bool& isFirstApplicable2)
+    {
+        isFirstApplicable0 = false;
+        isFirstApplicable1 = false;
+        isFirstApplicable2 = false;
+
+        const size_t NumberOfSameRanksRequired = 3;
+        auto itBegin = std::begin(cards);
+        isFirstApplicable0 = AreCardsSameRank(itBegin, GetAdvancedIt(itBegin, NumberOfSameRanksRequired));
+        if (isFirstApplicable0)
+        {
+            return;
+        }
+
+        isFirstApplicable1 = AreCardsSameRank(GetAdvancedIt(itBegin, 1), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 1));
+        if (isFirstApplicable1)
+        {
+            return;
+        }
+
+        isFirstApplicable2 = AreCardsSameRank(GetAdvancedIt(itBegin, 2), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 2));
     }
 }
 
@@ -408,7 +438,56 @@ CompareResult::Value CompareStraight(const Hand& first, const Hand& second)
 
 CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second)
 {
-    throw std::exception("Not implemented");
+    // The number in bools means the index of the first of 3 same ranks
+    bool isFirstApplicable0 = false, isFirstApplicable1 = false, isFirstApplicable2 = false;
+    Check3OfAKind(first, isFirstApplicable0, isFirstApplicable1, isFirstApplicable2);
+    const bool isFirstApplicable = isFirstApplicable0 || isFirstApplicable1 || isFirstApplicable2;
+
+    bool isSecondApplicable0 = false, isSecondApplicable1 = false, isSecondApplicable2 = false;
+    Check3OfAKind(second, isSecondApplicable0, isSecondApplicable1, isSecondApplicable2);
+    const bool isSecondApplicable = isSecondApplicable0 || isSecondApplicable1 || isSecondApplicable2;
+
+    if (isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (!isFirstApplicable && isSecondApplicable)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (!isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::BothLose;
+    }
+
+    const auto rank1First = GetRankInt(isFirstApplicable0 ? first[3] : first[0]);
+    const auto rank2First = GetRankInt(isFirstApplicable2 ? first[1] : first[4]);
+    const auto rank1Second = GetRankInt(isFirstApplicable0 ? second[3] : second[0]);
+    const auto rank2Second = GetRankInt(isFirstApplicable2 ? second[1] : second[4]);
+
+    if (rank1First > rank1Second)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (rank1First < rank1Second)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (rank2First > rank2Second)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (rank2First < rank2Second)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    return CompareResult::BothWon;
 }
 
 CompareResult::Value CompareTwoPair(const Hand& first, const Hand& second)
@@ -435,11 +514,6 @@ CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs)
 	{
 		return result;
 	}
-
-   
-    return result; // TODO Delete!
-
-
 
 	result = Compare4OfAKind(rhs, lhs);
 	if (result != CompareResult::BothLose)

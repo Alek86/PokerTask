@@ -65,6 +65,15 @@ namespace
             ShowError(__FUNCTION__, first, second, expectedResult, result);
         }
     }
+
+    void Test3OfAKind(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = Compare3OfAKind(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
 }
 
 void RunTests()
@@ -104,4 +113,13 @@ void RunTests()
     TestStraight("Ad-Th-Kd-Js-Qd", "Ts-Ks-Ad-Js-Qs", CompareResult::BothWon);
     TestStraight("Ah-3c-2d-5h-4h", "Ts-Ks-Ac-Jc-Qs", CompareResult::SecondWon);
 
+
+    Test3OfAKind("Ac-Ah-Ad-Kd-Qh", "Td-Ks-Ac-Js-Qs", CompareResult::FirstWon);
+    Test3OfAKind("Td-As-Ac-Js-Qs", "Ac-Ah-Ad-Td-2h", CompareResult::SecondWon);
+    Test3OfAKind("Ac-Ah-Ad-Kd-Qh", "Ac-Ah-Ad-Td-Qh", CompareResult::FirstWon);
+    Test3OfAKind("Ac-Ah-Ad-Td-Qh", "Ac-Ah-Ad-Kd-Qh", CompareResult::SecondWon);
+    Test3OfAKind("Ac-Ah-Ad-Kd-Qh", "Ac-Ah-Ad-Kd-5h", CompareResult::FirstWon);
+    Test3OfAKind("Ac-Ah-Ad-Kd-5h", "Ac-Ah-Ad-Kd-Qh", CompareResult::SecondWon);
+    Test3OfAKind("Ac-Ah-Ad-Kc-Qc", "Ac-Ah-Ad-Kd-Qh", CompareResult::BothWon);
+    Test3OfAKind("Ac-3h-Ad-Kc-Qc", "Ac-7h-Ad-Kd-Qh", CompareResult::BothLose);
 }
