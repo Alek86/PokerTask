@@ -35,6 +35,19 @@ namespace CompareResult { enum Value {
 	BothLose = -2
 };}
 
+namespace HighRanking { enum Value
+{
+    StraighFlush,
+    FourOfAKind,
+    FullHouse,
+    Flush,
+    Straight,
+    ThreeOfAKind,
+    TwoPair,
+    OnePair,
+    HighCard
+};}
+
 struct Card
 {
 	Rank::Value rank;

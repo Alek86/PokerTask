@@ -160,6 +160,51 @@ namespace
         isApplicable2 = AreCardsSameRank(GetAdvancedIt(itBegin, 2), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 2));
         isApplicable3 = AreCardsSameRank(GetAdvancedIt(itBegin, 3), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 3));
     }
+
+    const int GetHighestRankForLow8Hand(const Hand& card)
+    {
+        // In Low Hand there shouldn't be duplicated ranks, so card[1] is not Ace
+        if (card[0].rank == Rank::Ace)
+        {
+            return GetRankInt(card[1]);
+        }
+
+        return GetRankInt(card[0]);
+    }
+
+    const bool AllCardsNoMore8(const Hand& cards)
+    {
+        for (size_t i = 0; i < cards.size(); ++i)
+        {
+            if (cards[i].rank == Rank::Ace)
+            {
+                continue;
+            }
+
+            if (GetRankInt(cards[i]) > static_cast<int>(Rank::C8))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    const bool AllCardsDifferByRank(const Hand& cards)
+    {
+        for (size_t i = 0; i < cards.size(); ++i)
+        {
+            for (size_t j = i + 1; j < cards.size(); ++j)
+            {
+                if (cards[i].rank == cards[j].rank)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
 
 Hand GetBestHand(
@@ -658,7 +703,7 @@ CompareResult::Value CompareHighCard(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs)
+CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs, HighRanking::Value& highRankingResult)
 {
 	CompareResult::Value result = CompareResult::BothLose;
 
@@ -712,4 +757,40 @@ CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs)
 
 	result = CompareHighCard(rhs, lhs);
 	return result;
+}
+
+CompareResult::Value CompareLowHand(const Hand& first, const Hand& second)
+{
+    const bool isFirstApplicable = AllCardsNoMore8(first) && AllCardsDifferByRank(first);
+    const bool isSecondApplicable = AllCardsNoMore8(second) && AllCardsDifferByRank(second);
+
+    if (isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (!isFirstApplicable && isSecondApplicable)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (!isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::BothLose;
+    }
+
+    const int highestRankFirst = GetHighestRankForLow8Hand(first);
+    const int highestRankSecond = GetHighestRankForLow8Hand(second);
+
+    if (highestRankFirst > highestRankSecond)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (highestRankFirst < highestRankSecond)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    return CompareResult::BothWon;
 }

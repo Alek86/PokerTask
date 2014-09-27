@@ -9,22 +9,19 @@ int main(int argc, char *argv[])
 {
     try
     {
+        CardSet handA = Parse("Qc-Jd-Td-3d");
+        CardSet handB = Parse("3s-3h-8h-6d");
+        CardSet board = Parse("Ad-Kh-Qs-Qd-3c");
 
-
-          CardSet handA = Parse("Qc-Jd-Td-3d");
-          CardSet handB = Parse("3s-3h-8h-6d");
-          CardSet board = Parse("Ad-Kh-Qs-Qd-3c");
-
-//         CardSet handA = Parse("Ac-Kd-Jd-3d");
-//         CardSet handB = Parse("5c-5d-6c-7d");
-//         CardSet board = Parse("Ah-Kh-5s-2s-Qd");
-        
-         auto bestHandA = GetBestHand(handA, board, CompareHighHand);
-         auto bestHandB = GetBestHand(handB, board, CompareHighHand);
-         CompareResult::Value comparisonResult = CompareHighHand(bestHandA, bestHandB);
+        using namespace std::placeholders;
+        auto resA = HighRanking::HighCard;
+        auto resB = HighRanking::HighCard;
+        auto resMain = HighRanking::HighCard;
+        auto bestHandA = GetBestHand(handA, board, std::bind(CompareHighHand, _1, _2, std::ref(resA)));
+        auto bestHandB = GetBestHand(handB, board, std::bind(CompareHighHand, _1, _2, std::ref(resB)));
+        auto comparisonResult = CompareHighHand(bestHandA, bestHandB, resMain);
 
         RunTests();
-
 
         std::cout << std::endl;
     }

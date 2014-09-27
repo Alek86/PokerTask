@@ -9,8 +9,11 @@ Hand GetBestHand(
 	const CardSet& onBoard,
 	std::function<CompareResult::Value(const Hand&, const Hand&)> isFirstBetterPredicate);
 
-CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs);
+CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs, HighRanking::Value& highRankingResult);
+CompareResult::Value CompareLowHand(const Hand& rhs, const Hand& lhs);
 
+
+// These functions are here for testing purposes
 CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second);
 CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second);
 CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second);
