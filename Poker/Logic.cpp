@@ -162,7 +162,7 @@ namespace
     }
 }
 
-Hand GetBestSet(
+Hand GetBestHand(
 	const CardSet& inHand,
 	const CardSet& onBoard,
 	std::function<CompareResult::Value(const Hand&, const Hand&)> isFirstBetterPredicate)
@@ -389,19 +389,7 @@ CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
         return CompareResult::BothLose;
     }
 
-    const auto highestRankFirst = GetRankInt(first[0]);
-    const auto highestRankSecond = GetRankInt(second[0]);
-    if (highestRankFirst > highestRankSecond)
-    {
-        return CompareResult::FirstWon;
-    }
-
-    if (highestRankFirst < highestRankSecond)
-    {
-        return CompareResult::SecondWon;
-    }
-
-    return CompareResult::BothWon;
+    return CompareHighCard(first, second);
 }
 
 CompareResult::Value CompareStraight(const Hand& first, const Hand& second)

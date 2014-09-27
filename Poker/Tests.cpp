@@ -133,7 +133,8 @@ void RunTests()
     TestFlush("5s-5h-Jc-Jc-Ad", "5s-4s-Kc-2s-As", CompareResult::BothLose);
     TestFlush("5s-2s-Js-Ks-Ts", "5d-4d-Jd-2d-Qd", CompareResult::FirstWon);
     TestFlush("5s-2s-Js-9s-Ts", "5d-4d-7d-2d-Qd", CompareResult::SecondWon);
-    TestFlush("5s-2s-Js-Ks-Ts", "5d-4d-Kd-2d-Qd", CompareResult::BothWon);
+    TestFlush("As-Ks-Qs-Js-2s", "Ad-Kd-Qd-Jd-2d", CompareResult::BothWon);
+    TestFlush("As-Ks-Qs-Js-2s", "Ad-Qd-6d-6d-2d", CompareResult::FirstWon);
 
     TestStraight("Ac-Th-Kh-Jd-Qh", "Td-Ks-Ac-Js-Qs", CompareResult::BothWon);
     TestStraight("Ac-Td-Kd-Ts-Qd", "Ts-Ks-Jd-As-Qs", CompareResult::SecondWon);
