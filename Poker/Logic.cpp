@@ -45,6 +45,19 @@ namespace
 		return isSpecialCaseTrue;
 	}
 
+    const int GetHighestStraigtRank(const Hand& card)
+    {
+        // The cards must be Straight category if they are passed to this funtion.
+        // The ace could be a lower card, need to check this situation
+
+        if (card[0].rank == Rank::Ace && card[1].rank == Rank::C5)
+        {
+            return GetRankInt(card[1]);
+        }
+
+        return GetRankInt(card[0]);
+    }
+
 	bool AreCardsSameSuit(const Hand& cards)
 	{
 		auto firstSuit = cards[0].suit;
@@ -206,8 +219,8 @@ CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second)
         return CompareResult::BothLose;
     }
 
-    const int highestCardFromFirst = GetRankInt(first[0]);
-    const int highestCardFromSecond = GetRankInt(second[0]);
+    const int highestCardFromFirst = GetHighestStraigtRank(first);
+    const int highestCardFromSecond = GetHighestStraigtRank(second);
 
     if (highestCardFromFirst > highestCardFromSecond)
     {

@@ -65,8 +65,8 @@ void RunTests()
     TestStraightFlush("Ad-Td-Kd-Js-Qd", "Ts-Ks-Ac-Js-Qs", CompareResult::BothLose);
     TestStraightFlush("Ad-Td-Kd-Jd-Qd", "Ts-Ks-As-Js-Qs", CompareResult::BothWon);
     TestStraightFlush("Ah-3h-2h-5h-4h", "Ts-Ks-Ac-Js-Qs", CompareResult::FirstWon);
-
-
+    TestStraightFlush("Ah-3h-2h-5h-4h", "Ts-Ks-9s-Js-Qs", CompareResult::SecondWon);
+    
     Test4OfAKind("2s-2h-2c-2d-4h", "Ts-Ks-Ac-Js-Qs", CompareResult::FirstWon);
     Test4OfAKind("Ah-3h-2h-5h-4h", "2s-2h-2c-2d-Ah", CompareResult::SecondWon);
     Test4OfAKind("3s-3h-Jc-3c-3d", "2s-2h-2d-4h-2c", CompareResult::FirstWon);
