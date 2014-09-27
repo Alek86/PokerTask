@@ -75,9 +75,27 @@ namespace
         }
     }
 
-    void TestTwoPair(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    void TestTwoPairs(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
     {
-        auto result = CompareTwoPair(ParseToHand(first), ParseToHand(second));
+        auto result = CompareTwoPairs(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
+
+    void TestOnePair(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = CompareOnePair(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
+
+    void TestHighCard(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = CompareHighCard(ParseToHand(first), ParseToHand(second));
         if (result != expectedResult)
         {
             ShowError(__FUNCTION__, first, second, expectedResult, result);
@@ -122,9 +140,10 @@ void RunTests()
     TestStraight("Ad-Th-Kd-Js-Qd", "Ts-Ks-Ad-Js-Qs", CompareResult::BothWon);
     TestStraight("Ah-3c-2d-5h-4h", "Ts-Ks-Ac-Jc-Qs", CompareResult::SecondWon);
 
-
     Test3OfAKind("Ac-Ah-Ad-Kd-Qh", "Td-Ks-Ac-Js-Qs", CompareResult::FirstWon);
     Test3OfAKind("Td-As-Ac-Js-Qs", "Ac-Ah-Ad-Td-2h", CompareResult::SecondWon);
+    Test3OfAKind("Ac-Ah-Ad-2d-3h", "Kc-Kh-Kd-Ad-Qh", CompareResult::FirstWon);
+    Test3OfAKind("Kc-Kh-Kd-Ad-Qh", "Ac-Ah-Ad-2d-3h", CompareResult::SecondWon);
     Test3OfAKind("Ac-Ah-Ad-Kd-Qh", "Ac-Ah-Ad-Td-Qh", CompareResult::FirstWon);
     Test3OfAKind("Ac-Ah-Ad-Td-Qh", "Ac-Ah-Ad-Kd-Qh", CompareResult::SecondWon);
     Test3OfAKind("Ac-Ah-Ad-Kd-Qh", "Ac-Ah-Ad-Kd-5h", CompareResult::FirstWon);
@@ -133,14 +152,33 @@ void RunTests()
     Test3OfAKind("Ac-3h-Ad-Kc-Qc", "Ac-7h-Ad-Kd-Qh", CompareResult::BothLose);
 
 
-    TestTwoPair("Ac-Ah-Kd-Kc-Qc", "Ac-7h-Ad-Kd-Qh", CompareResult::FirstWon);
-    TestTwoPair("Ac-7h-Ad-Kd-Qh", "Ac-Ah-Kd-Kc-Qc", CompareResult::SecondWon);
-    TestTwoPair("Ac-Ah-Kd-Kc-Qc", "Ac-Qh-Ad-Kd-Qh", CompareResult::FirstWon);
-    TestTwoPair("Ac-Qc-Ad-Kd-Qh", "Ac-Ah-Kd-Kc-Qc", CompareResult::SecondWon);
-    TestTwoPair("Ac-Ah-2d-2c-Qc", "Kc-Kh-Qd-Kc-Qc", CompareResult::FirstWon);
-    TestTwoPair("Kc-Kh-Qd-Kc-Qc", "Ac-Ah-2d-2c-Qc", CompareResult::SecondWon);
-    TestTwoPair("Ac-Ah-2d-2c-Qc", "Ac-Ah-2d-2c-Tc", CompareResult::FirstWon);
-    TestTwoPair("Ac-Ah-2d-2c-Tc", "Ac-Ah-2d-2c-Qc", CompareResult::SecondWon);
-    TestTwoPair("Ac-Ah-2d-2c-Qc", "As-Ad-2s-2h-Qd", CompareResult::BothWon);
-    TestTwoPair("Ac-Ah-5d-2c-Tc", "Ac-Ah-3d-2c-Qc", CompareResult::BothLose);
+    TestTwoPairs("Ac-Ah-Kd-Kc-Qc", "Ac-7h-Ad-Kd-Qh", CompareResult::FirstWon);
+    TestTwoPairs("Ac-7h-Ad-Kd-Qh", "Ac-Ah-Kd-Kc-Qc", CompareResult::SecondWon);
+    TestTwoPairs("Ac-Ah-Kd-Kc-Qc", "Ac-Qh-Ad-Kd-Qh", CompareResult::FirstWon);
+    TestTwoPairs("Ac-Qc-Ad-Kd-Qh", "Ac-Ah-Kd-Kc-Qc", CompareResult::SecondWon);
+    TestTwoPairs("Ac-Ah-2d-2c-Qc", "Kc-Kh-Qd-Kc-Qc", CompareResult::FirstWon);
+    TestTwoPairs("Kc-Kh-Qd-Kc-Qc", "Ac-Ah-2d-2c-Qc", CompareResult::SecondWon);
+    TestTwoPairs("Ac-Ah-2d-2c-Qc", "Ac-Ah-2d-2c-Tc", CompareResult::FirstWon);
+    TestTwoPairs("Ac-Ah-2d-2c-Tc", "Ac-Ah-2d-2c-Qc", CompareResult::SecondWon);
+    TestTwoPairs("Ac-Ah-2d-2c-Qc", "As-Ad-2s-2h-Qd", CompareResult::BothWon);
+    TestTwoPairs("Ac-Ah-5d-2c-Tc", "Ac-Ah-3d-2c-Qc", CompareResult::BothLose);
+
+    TestOnePair("Ac-Ah-2d-Kc-Qc", "Ac-7h-Jd-Kd-Qh", CompareResult::FirstWon);
+    TestOnePair("Ac-7h-Jd-Kd-Qh", "Ac-Ah-3d-Kc-Qc", CompareResult::SecondWon);
+    TestOnePair("Ac-Ah-2d-Kc-Qc", "5c-5h-2d-Kc-Qc", CompareResult::FirstWon);
+    TestOnePair("5c-5h-2d-Kc-Qc", "Ac-Ah-3d-Kc-Qc", CompareResult::SecondWon);
+    TestOnePair("Ac-Ah-2d-Kc-Qc", "Ac-Ah-2d-Tc-Qc", CompareResult::FirstWon);
+    TestOnePair("Ac-Ah-2d-Tc-Qc", "Ac-Ah-2d-Kc-Qc", CompareResult::SecondWon);
+    TestOnePair("Ac-Ah-2d-Kc-Qc", "Ac-Ah-2d-Tc-Kc", CompareResult::FirstWon);
+    TestOnePair("Ac-Ah-2d-Tc-Kc", "Ac-Ah-2d-Kc-Qc", CompareResult::SecondWon);
+    TestOnePair("Ac-Ah-7d-Kc-Qc", "Ac-Ah-4d-Qc-Kc", CompareResult::FirstWon);
+    TestOnePair("Ac-Ah-4d-Qc-Kc", "Ac-Ah-7d-Kc-Qc", CompareResult::SecondWon);
+    TestOnePair("Ac-Ah-4d-Kc-Qc", "Ac-Ah-4d-Qc-Kc", CompareResult::BothWon);
+    TestOnePair("Jc-Ah-4d-Qc-Kc", "Ac-Th-7d-Kc-Qc", CompareResult::BothLose);
+
+    TestHighCard("Ac-Kh-Qd-Jc-9c", "Ac-Th-7d-Kc-Qc", CompareResult::FirstWon);
+    TestHighCard("Ac-Th-7d-Kc-Qc", "Ac-Kh-Qd-Jc-9c", CompareResult::SecondWon);
+    TestHighCard("Ac-Kh-9d-8c-7c", "Ac-Kh-9d-7c-5c", CompareResult::FirstWon);
+    TestHighCard("Ac-Kh-9d-7c-5c", "Ac-Kh-9d-8c-7c", CompareResult::SecondWon);
+    TestHighCard("Ac-Kc-Qd-Jc-9c", "Ah-Kh-Qd-Jh-9c", CompareResult::BothWon);
 }

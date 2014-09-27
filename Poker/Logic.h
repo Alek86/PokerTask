@@ -17,6 +17,6 @@ CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second);
 CompareResult::Value CompareFlush(const Hand& first, const Hand& second);
 CompareResult::Value CompareStraight(const Hand& first, const Hand& second);
 CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second);
-CompareResult::Value CompareTwoPair(const Hand& first, const Hand& second);
+CompareResult::Value CompareTwoPairs(const Hand& first, const Hand& second);
 CompareResult::Value CompareOnePair(const Hand& first, const Hand& second);
 CompareResult::Value CompareHighCard(const Hand& first, const Hand& second);
