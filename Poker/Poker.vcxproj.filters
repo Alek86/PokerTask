@@ -3,4 +3,8 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="HighHand.h" />
+  </ItemGroup>
 </Project>
