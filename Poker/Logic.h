@@ -4,9 +4,9 @@
 
 #include <functional>
 
-Cards GetBestSet(
-	const Cards& hand,
-	const Cards& board,
-	std::function<CompareResult::Value(const Cards&, const Cards&)> isFirstBetterPredicate);
+Hand GetBestSet(
+	const CardSet& inHand,
+	const CardSet& onBoard,
+	std::function<CompareResult::Value(const CardSet&, const CardSet&)> isFirstBetterPredicate);
 
-CompareResult::Value CompareHighHand(const Cards& rhs, const Cards& lhs);
+CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs);

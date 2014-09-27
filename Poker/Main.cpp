@@ -5,9 +5,9 @@
 
 int main(int argc, char *argv[])
 {
-	Cards hand1;
-	Cards hand2;
-	Cards board;
+	CardSet hand1;
+	CardSet hand2;
+	CardSet board;
 
 	auto bestSet = GetBestSet(hand1, board, CompareHighHand);
 

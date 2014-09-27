@@ -4,11 +4,12 @@
 
 namespace
 {
-	// TODO rewrite with std::array
+    int GetRankInt(const Card& card)
+    {
+        return static_cast<int>(card.rank);
+    }
 
-	const size_t g_lengthOfCardSet = 5;
-
-	bool IsFound(const Cards& cards, Rank::Value rank)
+	bool IsFound(const Hand& cards, Rank::Value rank)
 	{
 		return std::find_if(
 			std::begin(cards),
@@ -18,40 +19,36 @@ namespace
 
 	// The function would be MUCH faster if Cards were std::set.
 	// But for the test task and 5 elements...
-	bool IsStraight(const Cards& cards)
+	bool IsStraight(const Hand& cards)
 	{
-		if (cards.size() != g_lengthOfCardSet)
-		{
-			throw std::exception("IsStraight, cards size is not right");
-		}
+        bool result = true;
+        for (auto i = 0; i < cards.size() - 1; ++i)
+        {
+            if (GetRankInt(cards[i]) != GetRankInt(cards[i + 1]) - 1)
+            {
+                result = false;
+                break;
+            }
+        }
 
-		auto minmax = std::minmax_element(
-			std::begin(cards),
-			std::end(cards),
-			[](const Card& r, const Card& l) { return r.rank < l.rank; });
-		if (minmax.second->rank - minmax.first->rank == g_lengthOfCardSet - 1)
-		{
-			return true;
-		}
+        if (result)
+        {
+            return true;
+        }
 
 		// If not, check the special case with Ace
-		auto isSpecialCaseWorked =
-			IsFound(cards, Rank::Ace) &&
-			IsFound(cards, Rank::C2) &&
-			IsFound(cards, Rank::C3) &&
-			IsFound(cards, Rank::C4) &&
-			IsFound(cards, Rank::C5);
+		bool isSpecialCaseWorked =
+			cards[0].rank == Rank::Ace &&
+			cards[1].rank == Rank::C2 &&
+			cards[2].rank == Rank::C3 &&
+			cards[3].rank == Rank::C4 &&
+			cards[4].rank == Rank::C5;
 
 		return isSpecialCaseWorked;
 	}
 
-	bool IsSameSuit(const Cards& cards)
+	bool IsSameSuit(const Hand& cards)
 	{
-		if (cards.size() != g_lengthOfCardSet)
-		{
-			throw std::exception("IsStraight, cards size is not right");
-		}
-
 		auto firstSuit = cards[0].suit;
 		for(auto it = std::begin(cards); it != std::end(cards); ++it)
 		{
@@ -64,57 +61,57 @@ namespace
 		return true;
 	}
 
-	CompareResult::Value CompareStraightFlush(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareStraightFlush(const Hand& rhs, const Hand& lhs)
 	{
 		IsStraight(rhs);
 		IsSameSuit(rhs);
 	}
 
-	CompareResult::Value Compare4OfAKind(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value Compare4OfAKind(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value CompareFullHouse(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareFullHouse(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value CompareFlush(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareFlush(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value CompareStraight(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareStraight(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value Compare3OfAKind(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value Compare3OfAKind(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value CompareTwoPair(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareTwoPair(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value CompareOnePair(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareOnePair(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 
-	CompareResult::Value CompareHighCard(const Cards& rhs, const Cards& lhs)
+	CompareResult::Value CompareHighCard(const Hand& rhs, const Hand& lhs)
 	{
 		;	
 	}
 }
 
-Cards GetBestSet(
-	const Cards& hand,
-	const Cards& board,
-	std::function<CompareResult::Value(const Cards&, const Cards&)> isFirstBetterPredicate)
+Hand GetBestSet(
+	const CardSet& inHand,
+	const CardSet& onBoard,
+	std::function<CompareResult::Value(const Hand&, const Hand&)> isFirstBetterPredicate)
 {
 	const size_t numOfHandCards = 2;
 	const size_t numOfCombinationsFromHand = 6;
@@ -145,22 +142,29 @@ Cards GetBestSet(
 		{2, 3, 4}
 	};
 
-	Cards bestSet;
+    bool isFirstIteration = true;
+	Hand bestSet;
 	for (size_t i = 0; i < numOfCombinationsFromHand; ++i)
 	{
 		for (size_t j = 0; j < numOfCombinationsFromBoard; ++j)
 		{
-			Cards currentSet(5);
-			currentSet.push_back(hand[combinationsFromHandIndices[i][0]]);
-			currentSet.push_back(hand[combinationsFromHandIndices[i][1]]);
-			currentSet.push_back(hand[combinationsFromBoardIndices[j][0]]);
-			currentSet.push_back(hand[combinationsFromBoardIndices[j][1]]);
-			currentSet.push_back(hand[combinationsFromBoardIndices[j][2]]);
+            // Create a hand (5 cards). It must be sorted by Rank
+            Hand currentSet;
+            currentSet[0] = inHand[combinationsFromHandIndices[i][0]];
+            currentSet[1] = inHand[combinationsFromHandIndices[i][1]];
+            currentSet[2] = onBoard[combinationsFromBoardIndices[j][0]];
+            currentSet[3] = onBoard[combinationsFromBoardIndices[j][1]];
+            currentSet[4] = onBoard[combinationsFromBoardIndices[j][2]];
+            std::sort(
+                std::begin(currentSet),
+                std::end(currentSet),
+                [](const Card& r, const Card& l) { return r.rank < l.rank; });
 
-			if (bestSet.empty())
+			if (isFirstIteration)
 			{
-				// The first iteration, the current set is the best we have
+				// The current set is the best we have
 				bestSet.swap(currentSet);
+                isFirstIteration = false;
 				continue;
 			}
 
@@ -174,7 +178,7 @@ Cards GetBestSet(
 	return bestSet;
 }
 
-CompareResult::Value CompareHighHand(const Cards& rhs, const Cards& lhs)
+CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs)
 {
 	CompareResult::Value result = CompareResult::BothLose;
 

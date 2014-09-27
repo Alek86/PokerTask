@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 
 namespace Rank { enum Value
 {
@@ -40,4 +41,9 @@ struct Card
 	Suit::Value suit;
 };
 
-typedef std::vector<Card> Cards;
+typedef std::vector<Card> CardSet;
+
+static const size_t NumOfCardsInHand = 5;
+
+// Hand must be also sorted by Rank
+typedef std::array<Card, NumOfCardsInHand> Hand;
