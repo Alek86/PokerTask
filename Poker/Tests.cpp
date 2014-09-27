@@ -74,6 +74,15 @@ namespace
             ShowError(__FUNCTION__, first, second, expectedResult, result);
         }
     }
+
+    void TestTwoPair(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = CompareTwoPair(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
 }
 
 void RunTests()
@@ -122,4 +131,16 @@ void RunTests()
     Test3OfAKind("Ac-Ah-Ad-Kd-5h", "Ac-Ah-Ad-Kd-Qh", CompareResult::SecondWon);
     Test3OfAKind("Ac-Ah-Ad-Kc-Qc", "Ac-Ah-Ad-Kd-Qh", CompareResult::BothWon);
     Test3OfAKind("Ac-3h-Ad-Kc-Qc", "Ac-7h-Ad-Kd-Qh", CompareResult::BothLose);
+
+
+    TestTwoPair("Ac-Ah-Kd-Kc-Qc", "Ac-7h-Ad-Kd-Qh", CompareResult::FirstWon);
+    TestTwoPair("Ac-7h-Ad-Kd-Qh", "Ac-Ah-Kd-Kc-Qc", CompareResult::SecondWon);
+    TestTwoPair("Ac-Ah-Kd-Kc-Qc", "Ac-Qh-Ad-Kd-Qh", CompareResult::FirstWon);
+    TestTwoPair("Ac-Qc-Ad-Kd-Qh", "Ac-Ah-Kd-Kc-Qc", CompareResult::SecondWon);
+    TestTwoPair("Ac-Ah-2d-2c-Qc", "Kc-Kh-Qd-Kc-Qc", CompareResult::FirstWon);
+    TestTwoPair("Kc-Kh-Qd-Kc-Qc", "Ac-Ah-2d-2c-Qc", CompareResult::SecondWon);
+    TestTwoPair("Ac-Ah-2d-2c-Qc", "Ac-Ah-2d-2c-Tc", CompareResult::FirstWon);
+    TestTwoPair("Ac-Ah-2d-2c-Tc", "Ac-Ah-2d-2c-Qc", CompareResult::SecondWon);
+    TestTwoPair("Ac-Ah-2d-2c-Qc", "As-Ad-2s-2h-Qd", CompareResult::BothWon);
+    TestTwoPair("Ac-Ah-5d-2c-Tc", "Ac-Ah-3d-2c-Qc", CompareResult::BothLose);
 }
