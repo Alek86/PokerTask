@@ -9,17 +9,19 @@ int main(int argc, char *argv[])
 {
     try
     {
-         CardSet handA = Parse("Ac-Kd-Jd-3d");
-         CardSet handB = Parse("5c-5d-6c-6d");
-         CardSet board = Parse("Ad-Kh-5s-2d-Qd");
+
+
+          CardSet handA = Parse("Qc-Jd-Td-3d");
+          CardSet handB = Parse("3s-3h-8h-6d");
+          CardSet board = Parse("Ad-Kh-Qs-Qd-3c");
 
 //         CardSet handA = Parse("Ac-Kd-Jd-3d");
 //         CardSet handB = Parse("5c-5d-6c-7d");
 //         CardSet board = Parse("Ah-Kh-5s-2s-Qd");
         
-//         auto bestHandA = GetBestHand(handA, board, CompareHighHand);
-//         auto bestHandB = GetBestHand(handB, board, CompareHighHand);
-//         CompareResult::Value comparisonResult = CompareHighHand(bestHandA, bestHandB);
+         auto bestHandA = GetBestHand(handA, board, CompareHighHand);
+         auto bestHandB = GetBestHand(handB, board, CompareHighHand);
+         CompareResult::Value comparisonResult = CompareHighHand(bestHandA, bestHandB);
 
         RunTests();
 
