@@ -372,7 +372,38 @@ CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
 
 CompareResult::Value CompareStraight(const Hand& first, const Hand& second)
 {
-    throw std::exception("Not implemented");
+    const bool isFirstApplicable = IsStraight(first);
+    const bool isSecondApplicable = IsStraight(second);
+
+    if (isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (!isFirstApplicable && isSecondApplicable)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (!isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::BothLose;
+    }
+
+    const int highestCardFromFirst = GetHighestStraigtRank(first);
+    const int highestCardFromSecond = GetHighestStraigtRank(second);
+
+    if (highestCardFromFirst > highestCardFromSecond)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (highestCardFromFirst < highestCardFromSecond)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    return CompareResult::BothWon;
 }
 
 CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second)

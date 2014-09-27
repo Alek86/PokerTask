@@ -56,6 +56,15 @@ namespace
             ShowError(__FUNCTION__, first, second, expectedResult, result);
         }
     }
+
+    void TestStraight(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = CompareStraight(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
 }
 
 void RunTests()
@@ -90,5 +99,9 @@ void RunTests()
     TestFlush("5s-2s-Js-9s-Ts", "5d-4d-7d-2d-Qd", CompareResult::SecondWon);
     TestFlush("5s-2s-Js-Ks-Ts", "5d-4d-Kd-2d-Qd", CompareResult::BothWon);
 
+    TestStraight("Ac-Th-Kh-Jd-Qh", "Td-Ks-Ac-Js-Qs", CompareResult::BothWon);
+    TestStraight("Ac-Td-Kd-Ts-Qd", "Ts-Ks-Jd-As-Qs", CompareResult::SecondWon);
+    TestStraight("Ad-Th-Kd-Js-Qd", "Ts-Ks-Ad-Js-Qs", CompareResult::BothWon);
+    TestStraight("Ah-3c-2d-5h-4h", "Ts-Ks-Ac-Jc-Qs", CompareResult::SecondWon);
 
 }
