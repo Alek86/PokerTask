@@ -324,7 +324,37 @@ CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second)
 
 CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
 {
-    throw std::exception("Not implemented");
+    bool isFirstApplicable = AreCardsSameSuit(first);
+    bool isSecondApplicable = AreCardsSameSuit(second);
+
+    if (isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (!isFirstApplicable && isSecondApplicable)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    if (!isFirstApplicable && !isSecondApplicable)
+    {
+        return CompareResult::BothLose;
+    }
+
+    const auto highestRankFirst = GetRankInt(first[0]);
+    const auto highestRankSecond = GetRankInt(second[0]);
+    if (highestRankFirst > highestRankSecond)
+    {
+        return CompareResult::FirstWon;
+    }
+
+    if (highestRankFirst < highestRankSecond)
+    {
+        return CompareResult::SecondWon;
+    }
+
+    return CompareResult::BothWon;
 }
 
 CompareResult::Value CompareStraight(const Hand& first, const Hand& second)

@@ -47,6 +47,15 @@ namespace
             ShowError(__FUNCTION__, first, second, expectedResult, result);
         }
     }
+
+    void TestFlush(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
+    {
+        auto result = CompareFlush(ParseToHand(first), ParseToHand(second));
+        if (result != expectedResult)
+        {
+            ShowError(__FUNCTION__, first, second, expectedResult, result);
+        }
+    }
 }
 
 void RunTests()
@@ -73,4 +82,13 @@ void RunTests()
     TestFullHouse("2s-Ah-As-2c-2d", "5s-5h-Jc-Jc-Jd", CompareResult::SecondWon);
     TestFullHouse("2s-Jh-Js-2c-Jd", "5s-5h-Jc-Jc-Jd", CompareResult::SecondWon);
     TestFullHouse("5s-Jh-Js-5c-Jd", "5s-5h-Jc-Jc-Jd", CompareResult::BothWon);
+
+    TestFlush("5s-Ts-Ks-5s-As", "5s-5h-Jc-Jc-Kd", CompareResult::FirstWon);
+    TestFlush("5s-5h-Jc-Jc-Ad", "5s-4s-Ks-2s-As", CompareResult::SecondWon);
+    TestFlush("5s-5h-Jc-Jc-Ad", "5s-4s-Kc-2s-As", CompareResult::BothLose);
+    TestFlush("5s-2s-Js-Ks-Ts", "5d-4d-Jd-2d-Qd", CompareResult::FirstWon);
+    TestFlush("5s-2s-Js-9s-Ts", "5d-4d-7d-2d-Qd", CompareResult::SecondWon);
+    TestFlush("5s-2s-Js-Ks-Ts", "5d-4d-Kd-2d-Qd", CompareResult::BothWon);
+
+
 }
