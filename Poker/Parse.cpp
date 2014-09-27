@@ -58,6 +58,52 @@ namespace
     }
 }
 
+void Parse(const std::string& str, CardSet& handA, CardSet& handB, CardSet& board)
+{
+    if (str.size() != 56)
+    {
+        throw std::exception("Parse whole line, not expected string length");
+    }
+
+    {
+        handA.resize(4);
+        handA[0].rank = ParseRank(str[6]);
+        handA[0].suit = ParseSuit(str[7]);
+        handA[1].rank = ParseRank(str[9]);
+        handA[1].suit = ParseSuit(str[10]);
+        handA[2].rank = ParseRank(str[12]);
+        handA[2].suit = ParseSuit(str[13]);
+        handA[3].rank = ParseRank(str[15]);
+        handA[3].suit = ParseSuit(str[16]);
+    }
+
+    {
+        handB.resize(4);
+        handB[0].rank = ParseRank(str[24]);
+        handB[0].suit = ParseSuit(str[25]);
+        handB[1].rank = ParseRank(str[27]);
+        handB[1].suit = ParseSuit(str[28]);
+        handB[2].rank = ParseRank(str[30]);
+        handB[2].suit = ParseSuit(str[31]);
+        handB[3].rank = ParseRank(str[33]);
+        handB[3].suit = ParseSuit(str[34]);
+    }
+
+    {
+        board.resize(5);
+        board[0].rank = ParseRank(str[42]);
+        board[0].suit = ParseSuit(str[43]);
+        board[1].rank = ParseRank(str[45]);
+        board[1].suit = ParseSuit(str[46]);
+        board[2].rank = ParseRank(str[48]);
+        board[2].suit = ParseSuit(str[49]);
+        board[3].rank = ParseRank(str[51]);
+        board[3].suit = ParseSuit(str[52]);
+        board[4].rank = ParseRank(str[54]);
+        board[4].suit = ParseSuit(str[55]);
+    }
+}
+
 CardSet Parse(const std::string& str)
 {
     if (str.size() == 11)

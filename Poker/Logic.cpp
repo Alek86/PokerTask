@@ -710,52 +710,61 @@ CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs, HighRanki
 	result = CompareStraightFlush(rhs, lhs);
 	if (result != CompareResult::BothLose)
 	{
+        highRankingResult = HighRanking::StraighFlush;
 		return result;
 	}
 
 	result = Compare4OfAKind(rhs, lhs);
 	if (result != CompareResult::BothLose)
 	{
+        highRankingResult = HighRanking::FourOfAKind;
 		return result;
 	}
 
 	result = CompareFullHouse(rhs, lhs);
 	if (result != CompareResult::BothLose)
 	{
+        highRankingResult = HighRanking::FullHouse;
 		return result;
 	}
 
 	result = CompareFlush(rhs, lhs);
 	if (result != CompareResult::BothLose)
-	{
+    {
+        highRankingResult = HighRanking::Flush;
 		return result;
 	}
 
 	result = CompareStraight(rhs, lhs);
 	if (result != CompareResult::BothLose)
-	{
+    {
+        highRankingResult = HighRanking::Straight;
 		return result;
 	}
 
 	result = Compare3OfAKind(rhs, lhs);
 	if (result != CompareResult::BothLose)
-	{
+    {
+        highRankingResult = HighRanking::ThreeOfAKind;
 		return result;
 	}
 
 	result = CompareTwoPairs(rhs, lhs);
 	if (result != CompareResult::BothLose)
-	{
+    {
+        highRankingResult = HighRanking::TwoPair;
 		return result;
 	}
 
 	result = CompareOnePair(rhs, lhs);
 	if (result != CompareResult::BothLose)
-	{
+    {
+        highRankingResult = HighRanking::OnePair;
 		return result;
 	}
 
-	result = CompareHighCard(rhs, lhs);
+    result = CompareHighCard(rhs, lhs);
+    highRankingResult = HighRanking::HighCard;
 	return result;
 }
 
