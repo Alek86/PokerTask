@@ -10,7 +10,7 @@ namespace Logic
         struct CheckResult
         {
             bool isApplicable;
-            Rank::Value rankDuplicated;
+            Rank::Value rankMain;
             Rank::Value rankKicker;
         };
 
@@ -31,12 +31,12 @@ namespace Logic
                 return CompareResult::BothLose;
             }
 
-            if (first.rankDuplicated > second.rankDuplicated)
+            if (first.rankMain > second.rankMain)
             {
                 return CompareResult::FirstWon;
             }
 
-            if (first.rankDuplicated < second.rankDuplicated)
+            if (first.rankMain < second.rankMain)
             {
                 return CompareResult::SecondWon;
             }
@@ -74,7 +74,7 @@ namespace Logic
             result.isApplicable = AreCardsSameRank(itBegin, it4) || AreCardsSameRank(it1, std::end(cards));
 
             // In 4-of-a-kind in a sorted array the third card always has the duplicated rank
-            result.rankDuplicated = cards[2].rank;
+            result.rankMain = cards[2].rank;
             result.rankKicker = GetFourOfAKindKicker(cards);
 
             return result;

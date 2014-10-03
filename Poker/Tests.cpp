@@ -80,7 +80,7 @@ namespace
 
     void Test3OfAKind(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
     {
-        auto result = Compare3OfAKind(ParseToHand(first), ParseToHand(second));
+        auto result = CompareThreeOfAKind(ParseToHand(first), ParseToHand(second));
         if (result != expectedResult)
         {
             ShowError(__FUNCTION__, first, second, expectedResult, result);

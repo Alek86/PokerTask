@@ -41,7 +41,7 @@ namespace Logic
             return CompareResult::BothWon;
         }
 
-        CheckResult CheckStraightFlush( const Hand& first )
+        CheckResult Check(const Hand& first)
         {
             CheckResult result;
             result.isApplicable = IsStraight(first) && AreCardsSameSuit(first);
@@ -57,8 +57,8 @@ namespace Logic
 
     CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second)
     {
-        auto firstResult = CheckStraightFlush(first);
-        auto secondResult = CheckStraightFlush(second);
+        auto firstResult = Check(first);
+        auto secondResult = Check(second);
         return Compare(firstResult, secondResult);
     }
 }

@@ -172,7 +172,7 @@ namespace Logic
             return result;
         }
 
-        result = Compare3OfAKind(rhs, lhs);
+        result = CompareThreeOfAKind(rhs, lhs);
         if (result != CompareResult::BothLose)
         {
             highRankingResult = HighRanking::ThreeOfAKind;

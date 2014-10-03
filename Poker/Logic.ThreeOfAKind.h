@@ -4,5 +4,5 @@
 
 namespace Logic
 {
-    CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second);
+    CompareResult::Value CompareThreeOfAKind(const Hand& first, const Hand& second);
 }

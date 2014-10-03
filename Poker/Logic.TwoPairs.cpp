@@ -7,86 +7,111 @@ namespace Logic
 {
     namespace
     {
-        void CheckTwoPair(const Hand& cards, bool& isApplicable0And2, bool& isApplicable0And3, bool& isApplicable1And3)
+        struct CheckResult
         {
+            bool isApplicable;
+            Rank::Value rankMain1;
+            Rank::Value rankMain2;
+            Rank::Value rankKicker;
+        };
+
+        CompareResult::Value Compare(const CheckResult& first, const CheckResult& second)
+        {
+            if (first.isApplicable && !second.isApplicable)
+            {
+                return CompareResult::FirstWon;
+            }
+
+            if (!first.isApplicable && second.isApplicable)
+            {
+                return CompareResult::SecondWon;
+            }
+
+            if (!first.isApplicable && !second.isApplicable)
+            {
+                return CompareResult::BothLose;
+            }
+
+            if (first.rankMain1 > second.rankMain1)
+            {
+                return CompareResult::FirstWon;
+            }
+
+            if (first.rankMain1 < second.rankMain1)
+            {
+                return CompareResult::SecondWon;
+            }
+
+            if (first.rankMain2 > second.rankMain2)
+            {
+                return CompareResult::FirstWon;
+            }
+
+            if (first.rankMain2 < second.rankMain2)
+            {
+                return CompareResult::SecondWon;
+            }
+
+            if (first.rankKicker > second.rankKicker)
+            {
+                return CompareResult::FirstWon;
+            }
+
+            if (first.rankKicker < second.rankKicker)
+            {
+                return CompareResult::SecondWon;
+            }
+
+            return CompareResult::BothWon;
+        }
+
+        CheckResult Check(const Hand& cards)
+        {
+            CheckResult result;
             const size_t NumberOfSameRanksRequired = 2;
             auto itBegin = std::begin(cards);
-            isApplicable0And2 = 
+
+            result.isApplicable = 
                 AreCardsSameRank(itBegin, GetAdvancedIt(itBegin, NumberOfSameRanksRequired)) &&
                 AreCardsSameRank(GetAdvancedIt(itBegin, 2), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 2));
-            isApplicable0And3 = 
+            if (result.isApplicable)
+            {
+                result.rankMain1 = cards[0].rank;
+                result.rankMain2 = cards[2].rank;
+                result.rankKicker = cards[4].rank;
+                return result;
+            }
+
+            result.isApplicable = 
                 AreCardsSameRank(itBegin, GetAdvancedIt(itBegin, NumberOfSameRanksRequired)) &&
                 AreCardsSameRank(GetAdvancedIt(itBegin, 3), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 3));
-            isApplicable1And3 = 
+            if (result.isApplicable)
+            {
+                result.rankMain1 = cards[0].rank;
+                result.rankMain2 = cards[3].rank;
+                result.rankKicker = cards[2].rank;
+                return result;
+            }
+
+            result.isApplicable = 
                 AreCardsSameRank(GetAdvancedIt(itBegin, 1), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 1)) &&
                 AreCardsSameRank(GetAdvancedIt(itBegin, 3), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 3));
+            if (result.isApplicable)
+            {
+                result.rankMain1 = cards[1].rank;
+                result.rankMain2 = cards[3].rank;
+                result.rankKicker = cards[0].rank;
+                return result;
+            }
+
+            return result;
         }
     }
 
     CompareResult::Value CompareTwoPairs(const Hand& first, const Hand& second)
     {
-        // The numbers in bools mean the indices of the pairs
-        bool isFirstApplicable0And2 = false, isFirstApplicable0And3 = false, isFirstApplicable1And3 = false;
-        CheckTwoPair(first, isFirstApplicable0And2, isFirstApplicable0And3, isFirstApplicable1And3);
-        const bool isFirstApplicable = isFirstApplicable0And2 || isFirstApplicable0And3 || isFirstApplicable1And3;
-
-        bool isSecondApplicable0And2 = false, isSecondApplicable0And3 = false, isSecondApplicable1And3 = false;
-        CheckTwoPair(second, isSecondApplicable0And2, isSecondApplicable0And3, isSecondApplicable1And3);
-        const bool isSecondApplicable = isSecondApplicable0And2 || isSecondApplicable0And3 || isSecondApplicable1And3;
-
-        if (isFirstApplicable && !isSecondApplicable)
-        {
-            return CompareResult::FirstWon;
-        }
-
-        if (!isFirstApplicable && isSecondApplicable)
-        {
-            return CompareResult::SecondWon;
-        }
-
-        if (!isFirstApplicable && !isSecondApplicable)
-        {
-            return CompareResult::BothLose;
-        }
-
-        const auto rank1First = GetRankInt((isFirstApplicable0And2 || isFirstApplicable0And3) ? first[0] : first[1]);
-        const auto rank2First = GetRankInt((isFirstApplicable0And3 || isFirstApplicable1And3) ? first[3] : first[2]);
-        const auto rankKickerFirst = GetRankInt(isFirstApplicable0And2 ? first[4] : (isFirstApplicable0And3 ? first[2] : first[0]));
-
-        const auto rank1Second = GetRankInt((isSecondApplicable0And2 || isSecondApplicable0And3) ? second[0] : second[1]);
-        const auto rank2Second = GetRankInt((isSecondApplicable0And3 || isSecondApplicable1And3) ? second[3] : second[2]);
-        const auto rankKickerSecond = GetRankInt(isSecondApplicable0And2 ? second[4] : (isSecondApplicable0And3 ? second[2] : second[0]));
-
-        if (rank1First > rank1Second)
-        {
-            return CompareResult::FirstWon;
-        }
-
-        if (rank1First < rank1Second)
-        {
-            return CompareResult::SecondWon;
-        }
-
-        if (rank2First > rank2Second)
-        {
-            return CompareResult::FirstWon;
-        }
-
-        if (rank2First < rank2Second)
-        {
-            return CompareResult::SecondWon;
-        }
-
-        if (rankKickerFirst > rankKickerSecond)
-        {
-            return CompareResult::FirstWon;
-        }
-
-        if (rankKickerFirst < rankKickerSecond)
-        {
-            return CompareResult::SecondWon;
-        }
-
-        return CompareResult::BothWon;
+        const auto firstResult = Check(first);
+        const auto secondResult = Check(second);
+        return Compare(firstResult, secondResult);
     }
 }
