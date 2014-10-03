@@ -61,8 +61,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="Logic.Main.cpp" />
+    <ClCompile Include="Logic.Flush.cpp" />
+    <ClCompile Include="Logic.FourOfAKind.cpp" />
+    <ClCompile Include="Logic.FullHouse.cpp" />
+    <ClCompile Include="Logic.HighCard.cpp" />
+    <ClCompile Include="Logic.OnePair.cpp" />
+    <ClCompile Include="Logic.Straight.cpp" />
     <ClCompile Include="Logic.StraightFlush.cpp" />
+    <ClCompile Include="Logic.ThreeOfAKind.cpp" />
+    <ClCompile Include="Logic.TwoPairs.cpp" />
     <ClCompile Include="Logic.Utils.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Parse.cpp" />
@@ -70,8 +78,16 @@
     <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logic.h" />
+    <ClInclude Include="Logic.Flush.h" />
+    <ClInclude Include="Logic.FourOfAKind.h" />
+    <ClInclude Include="Logic.FullHouse.h" />
+    <ClInclude Include="Logic.Main.h" />
+    <ClInclude Include="Logic.HighCard.h" />
+    <ClInclude Include="Logic.OnePair.h" />
+    <ClInclude Include="Logic.Straight.h" />
     <ClInclude Include="Logic.StraightFlush.h" />
+    <ClInclude Include="Logic.ThreeOfAKind.h" />
+    <ClInclude Include="Logic.TwoPairs.h" />
     <ClInclude Include="Logic.Utils.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="ProcessFile.h" />

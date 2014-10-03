@@ -1,8 +1,16 @@
 #include "Tests.h"
 
-#include "Logic.h"
-#include "Logic.StraightFlush.h"
 #include "Parse.h"
+#include "Logic.StraightFlush.h"
+#include "Logic.FourOfAKind.h"
+#include "Logic.FullHouse.h"
+#include "Logic.Flush.h"
+#include "Logic.Straight.h"
+#include "Logic.ThreeOfAKind.h"
+#include "Logic.TwoPairs.h"
+#include "Logic.OnePair.h"
+#include "Logic.HighCard.h"
+#include "Logic.Utils.h"
 
 #include <string>
 #include <iostream>
@@ -36,7 +44,7 @@ namespace
 
     void Test4OfAKind(const std::string& first, const std::string& second, CompareResult::Value expectedResult)
     {
-        auto result = Compare4OfAKind(ParseToHand(first), ParseToHand(second));
+        auto result = CompareFourOfAKind(ParseToHand(first), ParseToHand(second));
         if (result != expectedResult)
         {
             ShowError(__FUNCTION__, first, second, expectedResult, result);

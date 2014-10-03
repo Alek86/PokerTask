@@ -1,7 +1,7 @@
 #include "ProcessFile.h"
 #include "Types.h"
 #include "Parse.h"
-#include "Logic.h"
+#include "Logic.Main.h"
 
 #include <sstream>
 #include <string>
