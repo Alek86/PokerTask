@@ -64,7 +64,7 @@ namespace Logic
             return cards[4].rank;
         }
 
-        CheckResult CheckFourOfAKind(const Hand& cards)
+        CheckResult Check(const Hand& cards)
         {
             CheckResult result;
 
@@ -83,9 +83,8 @@ namespace Logic
 
     CompareResult::Value CompareFourOfAKind(const Hand& first, const Hand& second)
     {
-        const auto firstResult = CheckFourOfAKind(first);
-        const auto secondResult = CheckFourOfAKind(second);
+        const auto firstResult = Check(first);
+        const auto secondResult = Check(second);
         return Compare(firstResult, secondResult);
-
     }
 }
