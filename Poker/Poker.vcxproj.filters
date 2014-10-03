@@ -5,11 +5,13 @@
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="Parse.cpp" />
     <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="ProcessFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h" />
     <ClInclude Include="Logic.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="Tests.h" />
+    <ClInclude Include="ProcessFile.h" />
   </ItemGroup>
 </Project>
