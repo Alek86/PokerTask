@@ -62,6 +62,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="Logic.StraightFlush.cpp" />
+    <ClCompile Include="Logic.Utils.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Parse.cpp" />
     <ClCompile Include="ProcessFile.cpp" />
@@ -69,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logic.h" />
+    <ClInclude Include="Logic.StraightFlush.h" />
+    <ClInclude Include="Logic.Utils.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="ProcessFile.h" />
     <ClInclude Include="Tests.h" />

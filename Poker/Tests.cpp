@@ -1,10 +1,14 @@
 #include "Tests.h"
 
 #include "Logic.h"
+#include "Logic.StraightFlush.h"
 #include "Parse.h"
 
 #include <string>
 #include <iostream>
+
+
+using namespace Logic;
 
 namespace
 {

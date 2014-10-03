@@ -136,6 +136,7 @@ namespace
 
 std::string ProcessInputLine(const std::string& line)
 {
+    using namespace Logic;
     CardSet handA;
     CardSet handB;
     CardSet board;

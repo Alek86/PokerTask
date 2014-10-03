@@ -1,14 +1,14 @@
 #include "Logic.h"
+#include "Logic.StraightFlush.h"
+#include "Logic.Utils.h"
 
 #include <algorithm>
 
-namespace
-{
-    int GetRankInt(const Card& card)
-    {
-        return static_cast<int>(card.rank);
-    }
 
+namespace Logic
+{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        namespace
+{
 	bool IsFound(const Hand& cards, Rank::Value rank)
 	{
 		return std::find_if(
@@ -17,60 +17,6 @@ namespace
 			[rank](const Card& card){ return card.rank == rank; }) != std::end(cards);
 	}
 
-	bool IsStraight(const Hand& cards)
-	{
-        bool result = true;
-        for (size_t i = 0; i < cards.size() - 1; ++i)
-        {
-            if (GetRankInt(cards[i]) != GetRankInt(cards[i + 1]) + 1)
-            {
-                result = false;
-                break;
-            }
-        }
-
-        if (result)
-        {
-            return true;
-        }
-
-		// If not, check the special case with Ace
-		bool isSpecialCaseTrue =
-			cards[0].rank == Rank::Ace &&
-			cards[1].rank == Rank::C5 &&
-			cards[2].rank == Rank::C4 &&
-			cards[3].rank == Rank::C3 &&
-			cards[4].rank == Rank::C2;
-
-		return isSpecialCaseTrue;
-	}
-
-    const int GetHighestStraigtRank(const Hand& card)
-    {
-        // The cards must be Straight category if they are passed to this funtion.
-        // The ace could be a lower card, need to check this situation
-
-        if (card[0].rank == Rank::Ace && card[1].rank == Rank::C5)
-        {
-            return GetRankInt(card[1]);
-        }
-
-        return GetRankInt(card[0]);
-    }
-
-	bool AreCardsSameSuit(const Hand& cards)
-	{
-		auto firstSuit = cards[0].suit;
-		for(auto it = std::begin(cards); it != std::end(cards); ++it)
-		{
-			if (it->suit != firstSuit)
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
 
     template <typename It>
     bool AreCardsSameRank(It begin, It end)
@@ -207,10 +153,10 @@ namespace
     }
 }
 
-Hand GetBestHand(
-	const CardSet& inHand,
-	const CardSet& onBoard,
-	std::function<CompareResult::Value(const Hand&, const Hand&)> isFirstBetterPredicate)
+    Hand GetBestHand(
+	    const CardSet& inHand,
+	    const CardSet& onBoard,
+	                                                                                                                                                                                                                                                    std::function<CompareResult::Value(const Hand&, const Hand&)> isFirstBetterPredicate)
 {
 	const size_t numOfHandCards = 2;
 	const size_t numOfCombinationsFromHand = 6;
@@ -278,44 +224,8 @@ Hand GetBestHand(
 	return bestSet;
 }
 
-CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second)
-{
-    const bool isFirstApplicable = IsStraight(first) && AreCardsSameSuit(first);
-    const int highestCardFromFirst = GetHighestStraigtRank(first);
 
-    const bool isSecondApplicable = IsStraight(second) && AreCardsSameSuit(second);
-    const int highestCardFromSecond = GetHighestStraigtRank(second);
-
-    if (isFirstApplicable && !isSecondApplicable)
-    {
-        return CompareResult::FirstWon;
-    }
-
-    if (!isFirstApplicable && isSecondApplicable)
-    {
-        return CompareResult::SecondWon;
-    }
-
-    if (!isFirstApplicable && !isSecondApplicable)
-    {
-        return CompareResult::BothLose;
-    }
-
-
-    if (highestCardFromFirst > highestCardFromSecond)
-    {
-        return CompareResult::FirstWon;
-    }
-
-    if (highestCardFromFirst < highestCardFromSecond)
-    {
-        return CompareResult::SecondWon;
-    }
-
-    return CompareResult::BothWon;
-}
-
-CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second)
+                                                                                                                                                    CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second)
 {
     const bool isFirstApplicable = Check4OfAKind(first);
     const bool isSecondApplicable = Check4OfAKind(second);
@@ -362,7 +272,7 @@ CompareResult::Value Compare4OfAKind(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second)
+                                                                                                                                                                        CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second)
 {
     bool isFirstApplicable3And2 = false, isFirstApplicable2And3 = false;
     CheckFullHouse(first, isFirstApplicable3And2, isFirstApplicable2And3);
@@ -415,7 +325,7 @@ CompareResult::Value CompareFullHouse(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
+                                                                        CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
 {
     bool isFirstApplicable = AreCardsSameSuit(first);
     bool isSecondApplicable = AreCardsSameSuit(second);
@@ -438,7 +348,7 @@ CompareResult::Value CompareFlush(const Hand& first, const Hand& second)
     return CompareHighCard(first, second);
 }
 
-CompareResult::Value CompareStraight(const Hand& first, const Hand& second)
+                                                                                                                CompareResult::Value CompareStraight(const Hand& first, const Hand& second)
 {
     const bool isFirstApplicable = IsStraight(first);
     const bool isSecondApplicable = IsStraight(second);
@@ -474,7 +384,7 @@ CompareResult::Value CompareStraight(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second)
+                                                                                                                                                                                                                    CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second)
 {
     // The number in bools means the index of the first of 3 same ranks
     bool isFirstApplicable0 = false, isFirstApplicable1 = false, isFirstApplicable2 = false;
@@ -540,7 +450,7 @@ CompareResult::Value Compare3OfAKind(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value CompareTwoPairs(const Hand& first, const Hand& second)
+                                                                                                                                                                                                                    CompareResult::Value CompareTwoPairs(const Hand& first, const Hand& second)
 {
     // The numbers in bools mean the indices of the pairs
     bool isFirstApplicable0And2 = false, isFirstApplicable0And3 = false, isFirstApplicable1And3 = false;
@@ -607,7 +517,7 @@ CompareResult::Value CompareTwoPairs(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value CompareOnePair(const Hand& first, const Hand& second)
+                                                                                                                                                                                                                                                            CompareResult::Value CompareOnePair(const Hand& first, const Hand& second)
 {
     // The number in bools mean the index of the pair
     bool isFirstApplicable0 = false, isFirstApplicable1 = false, isFirstApplicable2 = false, isFirstApplicable3 = false;
@@ -686,121 +596,122 @@ CompareResult::Value CompareOnePair(const Hand& first, const Hand& second)
     return CompareResult::BothWon;
 }
 
-CompareResult::Value CompareHighCard(const Hand& first, const Hand& second)
-{
-    for (size_t i = 0; i < first.size(); ++i)
+    CompareResult::Value CompareHighCard(const Hand& first, const Hand& second)
     {
-        if (GetRankInt(first[i]) > GetRankInt(second[i]))
+        for (size_t i = 0; i < first.size(); ++i)
+        {
+            if (GetRankInt(first[i]) > GetRankInt(second[i]))
+            {
+                return CompareResult::FirstWon;
+            }
+
+            if (GetRankInt(first[i]) < GetRankInt(second[i]))
+            {
+                return CompareResult::SecondWon;
+            }
+        }
+
+        return CompareResult::BothWon;
+    }
+
+    CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs, HighRanking::Value& highRankingResult)
+    {
+	    CompareResult::Value result = CompareResult::BothLose;
+
+	    result = Logic::CompareStraightFlush(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+	    {
+            highRankingResult = HighRanking::StraighFlush;
+		    return result;
+	    }
+
+	    result = Compare4OfAKind(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+	    {
+            highRankingResult = HighRanking::FourOfAKind;
+		    return result;
+	    }
+
+	    result = CompareFullHouse(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+	    {
+            highRankingResult = HighRanking::FullHouse;
+		    return result;
+	    }
+
+	    result = CompareFlush(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+        {
+            highRankingResult = HighRanking::Flush;
+		    return result;
+	    }
+
+	    result = CompareStraight(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+        {
+            highRankingResult = HighRanking::Straight;
+		    return result;
+	    }
+
+	    result = Compare3OfAKind(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+        {
+            highRankingResult = HighRanking::ThreeOfAKind;
+		    return result;
+	    }
+
+	    result = CompareTwoPairs(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+        {
+            highRankingResult = HighRanking::TwoPair;
+		    return result;
+	    }
+
+	    result = CompareOnePair(rhs, lhs);
+	    if (result != CompareResult::BothLose)
+        {
+            highRankingResult = HighRanking::OnePair;
+		    return result;
+	    }
+
+        result = CompareHighCard(rhs, lhs);
+        highRankingResult = HighRanking::HighCard;
+	    return result;
+    }
+
+    CompareResult::Value CompareLowHand(const Hand& first, const Hand& second)
+    {
+        const bool isFirstApplicable = AllCardsNoMore8(first) && AllCardsDifferByRank(first);
+        const bool isSecondApplicable = AllCardsNoMore8(second) && AllCardsDifferByRank(second);
+
+        if (isFirstApplicable && !isSecondApplicable)
         {
             return CompareResult::FirstWon;
         }
 
-        if (GetRankInt(first[i]) < GetRankInt(second[i]))
+        if (!isFirstApplicable && isSecondApplicable)
         {
             return CompareResult::SecondWon;
         }
+
+        if (!isFirstApplicable && !isSecondApplicable)
+        {
+            return CompareResult::BothLose;
+        }
+
+        const int highestRankFirst = GetHighestRankForLow8Hand(first);
+        const int highestRankSecond = GetHighestRankForLow8Hand(second);
+
+        if (highestRankFirst > highestRankSecond)
+        {
+            return CompareResult::SecondWon;
+        }
+
+        if (highestRankFirst < highestRankSecond)
+        {
+            return CompareResult::FirstWon;
+        }
+
+        return CompareResult::BothWon;
     }
-
-    return CompareResult::BothWon;
-}
-
-CompareResult::Value CompareHighHand(const Hand& rhs, const Hand& lhs, HighRanking::Value& highRankingResult)
-{
-	CompareResult::Value result = CompareResult::BothLose;
-
-	result = CompareStraightFlush(rhs, lhs);
-	if (result != CompareResult::BothLose)
-	{
-        highRankingResult = HighRanking::StraighFlush;
-		return result;
-	}
-
-	result = Compare4OfAKind(rhs, lhs);
-	if (result != CompareResult::BothLose)
-	{
-        highRankingResult = HighRanking::FourOfAKind;
-		return result;
-	}
-
-	result = CompareFullHouse(rhs, lhs);
-	if (result != CompareResult::BothLose)
-	{
-        highRankingResult = HighRanking::FullHouse;
-		return result;
-	}
-
-	result = CompareFlush(rhs, lhs);
-	if (result != CompareResult::BothLose)
-    {
-        highRankingResult = HighRanking::Flush;
-		return result;
-	}
-
-	result = CompareStraight(rhs, lhs);
-	if (result != CompareResult::BothLose)
-    {
-        highRankingResult = HighRanking::Straight;
-		return result;
-	}
-
-	result = Compare3OfAKind(rhs, lhs);
-	if (result != CompareResult::BothLose)
-    {
-        highRankingResult = HighRanking::ThreeOfAKind;
-		return result;
-	}
-
-	result = CompareTwoPairs(rhs, lhs);
-	if (result != CompareResult::BothLose)
-    {
-        highRankingResult = HighRanking::TwoPair;
-		return result;
-	}
-
-	result = CompareOnePair(rhs, lhs);
-	if (result != CompareResult::BothLose)
-    {
-        highRankingResult = HighRanking::OnePair;
-		return result;
-	}
-
-    result = CompareHighCard(rhs, lhs);
-    highRankingResult = HighRanking::HighCard;
-	return result;
-}
-
-CompareResult::Value CompareLowHand(const Hand& first, const Hand& second)
-{
-    const bool isFirstApplicable = AllCardsNoMore8(first) && AllCardsDifferByRank(first);
-    const bool isSecondApplicable = AllCardsNoMore8(second) && AllCardsDifferByRank(second);
-
-    if (isFirstApplicable && !isSecondApplicable)
-    {
-        return CompareResult::FirstWon;
-    }
-
-    if (!isFirstApplicable && isSecondApplicable)
-    {
-        return CompareResult::SecondWon;
-    }
-
-    if (!isFirstApplicable && !isSecondApplicable)
-    {
-        return CompareResult::BothLose;
-    }
-
-    const int highestRankFirst = GetHighestRankForLow8Hand(first);
-    const int highestRankSecond = GetHighestRankForLow8Hand(second);
-
-    if (highestRankFirst > highestRankSecond)
-    {
-        return CompareResult::SecondWon;
-    }
-
-    if (highestRankFirst < highestRankSecond)
-    {
-        return CompareResult::FirstWon;
-    }
-
-    return CompareResult::BothWon;
 }
