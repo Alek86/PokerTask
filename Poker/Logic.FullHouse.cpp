@@ -57,7 +57,6 @@ namespace Logic
         CheckResult Check(const Hand& cards)
         {
             CheckResult result;
-            // The hand is sorted, so we just check if 4 first or 4 last cards have the same rank
             auto itBegin = std::begin(cards);
             auto it2 = GetAdvancedIt(itBegin, 2);
             auto it3 = GetAdvancedIt(itBegin, 3);
