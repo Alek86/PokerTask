@@ -8,7 +8,7 @@ namespace Logic
         struct CheckResult
         {
             bool isApplicable;
-            Rank::Value highestRank;
+            Rank::Value rankMain;
         };
 
         CompareResult::Value Compare(const CheckResult& first, const CheckResult& second)
@@ -28,12 +28,12 @@ namespace Logic
                 return CompareResult::BothLose;
             }
 
-            if (first.highestRank > second.highestRank)
+            if (first.rankMain > second.rankMain)
             {
                 return CompareResult::FirstWon;
             }
 
-            if (first.highestRank < second.highestRank)
+            if (first.rankMain < second.rankMain)
             {
                 return CompareResult::SecondWon;
             }
@@ -48,7 +48,7 @@ namespace Logic
 
             if (result.isApplicable)
             {
-                result.highestRank = GetHighestStraigtRank(first);
+                result.rankMain = GetHighestStraigtRank(first);
             }
 
             return result;

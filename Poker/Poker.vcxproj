@@ -61,6 +61,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logic.CheckResult.h" />
     <ClCompile Include="Logic.Main.cpp" />
     <ClCompile Include="Logic.Flush.cpp" />
     <ClCompile Include="Logic.FourOfAKind.cpp" />
