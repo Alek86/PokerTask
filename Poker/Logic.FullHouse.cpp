@@ -2,58 +2,12 @@
 
 #include "Types.h"
 #include "Logic.Utils.h"
+#include "Logic.CheckResult.h"
 
 namespace Logic
 {
     namespace
     {
-        struct CheckResult
-        {
-            bool isApplicable;
-            Rank::Value rank3OfAKind;
-            Rank::Value rank2OfAKind;
-        };
-
-        CompareResult::Value Compare(const CheckResult& first, const CheckResult& second)
-        {
-            if (first.isApplicable && !second.isApplicable)
-            {
-                return CompareResult::FirstWon;
-            }
-
-            if (!first.isApplicable && second.isApplicable)
-            {
-                return CompareResult::SecondWon;
-            }
-
-            if (!first.isApplicable && !second.isApplicable)
-            {
-                return CompareResult::BothLose;
-            }
-
-            if (first.rank3OfAKind > second.rank3OfAKind)
-            {
-                return CompareResult::FirstWon;
-            }
-
-            if (first.rank3OfAKind < second.rank3OfAKind)
-            {
-                return CompareResult::SecondWon;
-            }
-
-            if (first.rank2OfAKind > second.rank2OfAKind)
-            {
-                return CompareResult::FirstWon;
-            }
-
-            if (first.rank2OfAKind < second.rank2OfAKind)
-            {
-                return CompareResult::SecondWon;
-            }
-
-            return CompareResult::BothWon;
-        }
-
         CheckResult Check(const Hand& cards)
         {
             CheckResult result;
@@ -64,16 +18,16 @@ namespace Logic
             result.isApplicable = AreCardsSameRank(itBegin, it2) && AreCardsSameRank(it2, std::end(cards));
             if (result.isApplicable)
             {
-                result.rank2OfAKind = cards[0].rank;
-                result.rank3OfAKind = cards[2].rank;
+                result.rankMain1.SetValue(cards[2].rank);
+                result.rankMain2.SetValue(cards[0].rank);
                 return result;
             }
 
             result.isApplicable = AreCardsSameRank(itBegin, it3) && AreCardsSameRank(it3, std::end(cards));
             if (result.isApplicable)
             {
-                result.rank2OfAKind = cards[3].rank;
-                result.rank3OfAKind = cards[0].rank;
+                result.rankMain1.SetValue(cards[0].rank);
+                result.rankMain2.SetValue(cards[3].rank);
                 return result;
             }
 

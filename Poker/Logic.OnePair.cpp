@@ -2,6 +2,7 @@
 
 #include "Types.h"
 #include "Logic.Utils.h"
+#include "Logic.CheckResult.h"
 
 namespace Logic
 {
@@ -9,75 +10,6 @@ namespace Logic
     {
         namespace
         {
-            struct CheckResult
-            {
-                bool isApplicable;
-                Rank::Value rankMain;
-                Rank::Value rankKicker1;
-                Rank::Value rankKicker2;
-                Rank::Value rankKicker3;
-            };
-
-            CompareResult::Value Compare(const CheckResult& first, const CheckResult& second)
-            {
-                if (first.isApplicable && !second.isApplicable)
-                {
-                    return CompareResult::FirstWon;
-                }
-
-                if (!first.isApplicable && second.isApplicable)
-                {
-                    return CompareResult::SecondWon;
-                }
-
-                if (!first.isApplicable && !second.isApplicable)
-                {
-                    return CompareResult::BothLose;
-                }
-
-                if (first.rankMain > second.rankMain)
-                {
-                    return CompareResult::FirstWon;
-                }
-
-                if (first.rankMain < second.rankMain)
-                {
-                    return CompareResult::SecondWon;
-                }
-
-                if (first.rankKicker1 > second.rankKicker1)
-                {
-                    return CompareResult::FirstWon;
-                }
-
-                if (first.rankKicker1 < second.rankKicker1)
-                {
-                    return CompareResult::SecondWon;
-                }
-
-                if (first.rankKicker2 > second.rankKicker2)
-                {
-                    return CompareResult::FirstWon;
-                }
-
-                if (first.rankKicker2 < second.rankKicker2)
-                {
-                    return CompareResult::SecondWon;
-                }
-
-                if (first.rankKicker3 > second.rankKicker3)
-                {
-                    return CompareResult::FirstWon;
-                }
-
-                if (first.rankKicker3 < second.rankKicker3)
-                {
-                    return CompareResult::SecondWon;
-                }
-
-                return CompareResult::BothWon;
-            }
-
             CheckResult Check(const Hand& cards)
             {
                 CheckResult result;
@@ -88,40 +20,40 @@ namespace Logic
                 result.isApplicable = AreCardsSameRank(itBegin, GetAdvancedIt(itBegin, NumberOfSameRanksRequired));
                 if (result.isApplicable)
                 {
-                    result.rankMain = cards[0].rank;
-                    result.rankKicker1 = cards[2].rank;
-                    result.rankKicker2 = cards[3].rank;
-                    result.rankKicker3 = cards[4].rank;
+                    result.rankMain1.SetValue(cards[0].rank);
+                    result.rankKicker1.SetValue(cards[2].rank);
+                    result.rankKicker2.SetValue(cards[3].rank);
+                    result.rankKicker3.SetValue(cards[4].rank);
                     return result;
                 }
 
                 result.isApplicable = AreCardsSameRank(GetAdvancedIt(itBegin, 1), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 1));
                 if (result.isApplicable)
                 {
-                    result.rankMain = cards[1].rank;
-                    result.rankKicker1 = cards[0].rank;
-                    result.rankKicker2 = cards[3].rank;
-                    result.rankKicker3 = cards[4].rank;
+                    result.rankMain1.SetValue(cards[1].rank);
+                    result.rankKicker1.SetValue(cards[0].rank);
+                    result.rankKicker2.SetValue(cards[3].rank);
+                    result.rankKicker3.SetValue(cards[4].rank);
                     return result;
                 }
 
                 result.isApplicable = AreCardsSameRank(GetAdvancedIt(itBegin, 2), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 2));
                 if (result.isApplicable)
                 {
-                    result.rankMain = cards[2].rank;
-                    result.rankKicker1 = cards[0].rank;
-                    result.rankKicker2 = cards[1].rank;
-                    result.rankKicker3 = cards[4].rank;
+                    result.rankMain1.SetValue(cards[2].rank);
+                    result.rankKicker1.SetValue(cards[0].rank);
+                    result.rankKicker2.SetValue(cards[1].rank);
+                    result.rankKicker3.SetValue(cards[4].rank);
                     return result;
                 }
 
                 result.isApplicable = AreCardsSameRank(GetAdvancedIt(itBegin, 3), GetAdvancedIt(itBegin, NumberOfSameRanksRequired + 3));
                 if (result.isApplicable)
                 {
-                    result.rankMain = cards[3].rank;
-                    result.rankKicker1 = cards[0].rank;
-                    result.rankKicker2 = cards[1].rank;
-                    result.rankKicker3 = cards[2].rank;
+                    result.rankMain1.SetValue(cards[3].rank);
+                    result.rankKicker1.SetValue(cards[0].rank);
+                    result.rankKicker2.SetValue(cards[1].rank);
+                    result.rankKicker3.SetValue(cards[2].rank);
                     return result;
                 }
 

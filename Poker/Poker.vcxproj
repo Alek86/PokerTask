@@ -61,6 +61,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logic.CheckResult.cpp" />
     <ClCompile Include="Logic.CheckResult.h" />
     <ClCompile Include="Logic.Main.cpp" />
     <ClCompile Include="Logic.Flush.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="Logic.Main.h" />
     <ClInclude Include="Logic.HighCard.h" />
     <ClInclude Include="Logic.OnePair.h" />
+    <ClInclude Include="Logic.OptionalRank.h" />
     <ClInclude Include="Logic.Straight.h" />
     <ClInclude Include="Logic.StraightFlush.h" />
     <ClInclude Include="Logic.ThreeOfAKind.h" />

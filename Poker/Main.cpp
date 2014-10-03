@@ -15,7 +15,7 @@ public:
     }
 };
 
-// Command arguments: c:\TEMP\poker_task_binary\input.txt c:\TEMP\poker_task_binary\output.txt
+// Command arguments: c:\TEMP\input.txt c:\TEMP\output.txt
 int main(int argc, char *argv[])
 {
     Pauser pauser;

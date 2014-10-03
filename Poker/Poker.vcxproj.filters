@@ -17,6 +17,7 @@
     <ClCompile Include="Logic.OnePair.cpp" />
     <ClCompile Include="Logic.Main.cpp" />
     <ClCompile Include="Logic.CheckResult.h" />
+    <ClCompile Include="Logic.CheckResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h" />
@@ -34,5 +35,6 @@
     <ClInclude Include="Logic.TwoPairs.h" />
     <ClInclude Include="Logic.OnePair.h" />
     <ClInclude Include="Logic.Main.h" />
+    <ClInclude Include="Logic.OptionalRank.h" />
   </ItemGroup>
 </Project>

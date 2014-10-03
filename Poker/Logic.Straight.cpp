@@ -2,47 +2,12 @@
 
 #include "Types.h"
 #include "Logic.Utils.h"
+#include "Logic.CheckResult.h"
 
 namespace Logic
 {
     namespace
     {
-        struct CheckResult
-        {
-            bool isApplicable;
-            Rank::Value rankMain;
-        };
-
-        CompareResult::Value Compare(const CheckResult& first, const CheckResult& second)
-        {
-            if (first.isApplicable && !second.isApplicable)
-            {
-                return CompareResult::FirstWon;
-            }
-
-            if (!first.isApplicable && second.isApplicable)
-            {
-                return CompareResult::SecondWon;
-            }
-
-            if (!first.isApplicable && !second.isApplicable)
-            {
-                return CompareResult::BothLose;
-            }
-
-            if (first.rankMain > second.rankMain)
-            {
-                return CompareResult::FirstWon;
-            }
-
-            if (first.rankMain < second.rankMain)
-            {
-                return CompareResult::SecondWon;
-            }
-
-            return CompareResult::BothWon;
-        }
-
         CheckResult Check(const Hand& first)
         {
             CheckResult result;
@@ -50,7 +15,7 @@ namespace Logic
 
             if (result.isApplicable)
             {
-                result.rankMain = GetHighestStraigtRank(first);
+                result.rankMain1.SetValue(GetHighestStraigtRank(first));
             }
 
             return result;
