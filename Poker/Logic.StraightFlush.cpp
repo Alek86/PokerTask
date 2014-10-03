@@ -5,13 +5,13 @@ namespace Logic
 {
     namespace
     {
-        struct StraightFlushCheckResult
+        struct CheckResult
         {
             bool isApplicable;
             Rank::Value highestRank;
         };
 
-        CompareResult::Value Compare(const StraightFlushCheckResult& first, const StraightFlushCheckResult& second)
+        CompareResult::Value Compare(const CheckResult& first, const CheckResult& second)
         {
             if (first.isApplicable && !second.isApplicable)
             {
@@ -41,9 +41,9 @@ namespace Logic
             return CompareResult::BothWon;
         }
 
-        StraightFlushCheckResult CheckStraightFlush( const Hand& first )
+        CheckResult CheckStraightFlush( const Hand& first )
         {
-            StraightFlushCheckResult result;
+            CheckResult result;
             result.isApplicable = IsStraight(first) && AreCardsSameSuit(first);
 
             if (result.isApplicable)
