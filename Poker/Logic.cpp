@@ -281,7 +281,10 @@ Hand GetBestHand(
 CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second)
 {
     const bool isFirstApplicable = IsStraight(first) && AreCardsSameSuit(first);
+    const int highestCardFromFirst = GetHighestStraigtRank(first);
+
     const bool isSecondApplicable = IsStraight(second) && AreCardsSameSuit(second);
+    const int highestCardFromSecond = GetHighestStraigtRank(second);
 
     if (isFirstApplicable && !isSecondApplicable)
     {
@@ -298,8 +301,6 @@ CompareResult::Value CompareStraightFlush(const Hand& first, const Hand& second)
         return CompareResult::BothLose;
     }
 
-    const int highestCardFromFirst = GetHighestStraigtRank(first);
-    const int highestCardFromSecond = GetHighestStraigtRank(second);
 
     if (highestCardFromFirst > highestCardFromSecond)
     {

@@ -6,8 +6,20 @@
 #include <ios>
 #include <sstream>
 
+class Pauser
+{
+public:
+    ~Pauser()
+    {
+        system("pause");
+    }
+};
+
+// Command arguments: c:\TEMP\poker_task_binary\input.txt c:\TEMP\poker_task_binary\output.txt
 int main(int argc, char *argv[])
 {
+    Pauser pauser;
+
     if (argc == 1)
     {
         std::cout << "Running tests... To process file pass 2 parameters" << std::endl;
